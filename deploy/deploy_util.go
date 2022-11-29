@@ -1,18 +1,23 @@
 package deploy
 
 import (
+	"auto-deployer/config"
 	"auto-deployer/utils/log"
 	"context"
 	"crypto/ecdsa"
+	"errors"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"math/big"
 )
 
-func NewEthCliByChainType(rpc, pk string) (*ethclient.Client, *bind.TransactOpts, error) {
-
-	return NewEthCli(rpc, pk)
+func NewEthCliByChainType(chainType uint32, pk string) (*ethclient.Client, *bind.TransactOpts, error) {
+	net := config.GetNetByChainType(chainType)
+	if len(net.RpcUrl) == 0 {
+		return nil, nil, errors.New("unsupported chain")
+	}
+	return NewEthCli(net.RpcUrl, pk)
 }
 
 func NewEthCli(rpc, pk string) (*ethclient.Client, *bind.TransactOpts, error) {
@@ -71,4 +76,19 @@ func NewEthCli(rpc, pk string) (*ethclient.Client, *bind.TransactOpts, error) {
 	auth.GasPrice = gasPrice
 
 	return client, auth, err
+}
+
+// Todo 维护nonce
+// 方案：1.从nodebalance获取nonce 2.nonce存入tstore,该账户不可人工使用
+func setNonce(client *ethclient.Client, auth *bind.TransactOpts) error {
+	//nonce, err := client.PendingNonceAt(context.Background(), auth.From)
+	//if err != nil {
+	//	log.Error().Msgf("%s", err)
+	//	return err
+	//}
+
+	//newNonce := new(big.Int)
+	//auth.Nonce = newNonce.SetUint64(nonce)
+	auth.Nonce.Add(auth.Nonce, big.NewInt(1))
+	return nil
 }

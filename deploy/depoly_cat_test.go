@@ -5,15 +5,16 @@ import (
 	cat_contract "auto-deployer/contract/cat"
 	minter_contract "auto-deployer/contract/cat_minter"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/tristan-club/kit/chain_info"
 	"os"
 	"testing"
 )
 
 func TestDeployCat(t *testing.T) {
 
-	polygonRpc := "https://polygon-rpc.com/"
+	chainType := uint32(chain_info.ChainTypePolygon)
 	pk := os.Getenv(constant.PK)
-	client, auth, err := NewEthCliByChainType(polygonRpc, pk)
+	client, auth, err := NewEthCliByChainType(chainType, pk)
 	if err != nil {
 		t.Errorf("new eth cli error:%s", err)
 		return
@@ -32,9 +33,8 @@ func TestDeployCat(t *testing.T) {
 	t.Logf("cat contract deploy hash:%s", catDeployTx.Hash().Hex())
 
 	//Deploy cat contract
-	client, auth, err = NewEthCliByChainType(polygonRpc, pk)
-	if err != nil {
-		t.Errorf("new eth cli error:%s", err)
+	if err := setNonce(client, auth); err != nil {
+		t.Errorf("set new nonce error:%s", err)
 		return
 	}
 	minterAddress, minterDeployTx, minterInstance, err := minter_contract.DeployStore(auth, client, catAddress)
@@ -47,9 +47,8 @@ func TestDeployCat(t *testing.T) {
 	t.Logf("minter contract deploy hash:%s", minterDeployTx.Hash().Hex())
 
 	//call contract
-	client, auth, err = NewEthCliByChainType(polygonRpc, pk)
-	if err != nil {
-		t.Errorf("new eth cli error:%s", err)
+	if err = setNonce(client, auth); err != nil {
+		t.Errorf("set new nonce error:%s", err)
 		return
 	}
 	_, err = catInstance.AddOperator(auth, minterAddress)
@@ -58,9 +57,8 @@ func TestDeployCat(t *testing.T) {
 		return
 	}
 
-	client, auth, err = NewEthCliByChainType(polygonRpc, pk)
-	if err != nil {
-		t.Errorf("new eth cli error:%s", err)
+	if err = setNonce(client, auth); err != nil {
+		t.Errorf("set new nonce error:%s", err)
 		return
 	}
 	_, err = minterInstance.FreeMint(auth, fromAddress)
@@ -72,6 +70,30 @@ func TestDeployCat(t *testing.T) {
 	of, err := catInstance.BalanceOf(nil, fromAddress)
 	if err != nil {
 		t.Errorf("%s", err)
+		return
+	}
+	t.Logf("balance:%s", of.String())
+}
+
+func TestCallContract(t *testing.T) {
+	chainType := uint32(chain_info.ChainTypePolygon)
+	pk := os.Getenv(constant.PK)
+	client, auth, err := NewEthCliByChainType(chainType, pk)
+	if err != nil {
+		t.Errorf("new eth cli error:%s", err)
+		return
+	}
+	fromAddress := auth.From
+
+	instance, err := cat_contract.NewStore(common.HexToAddress("0xe20EA3D034bA8c7dEdAD73FF16BCaE966e204278"), client)
+	if err != nil {
+		t.Errorf("get instance error:%s", err)
+		return
+	}
+
+	of, err := instance.BalanceOf(nil, fromAddress)
+	if err != nil {
+		t.Errorf("call contract error:%s", err)
 		return
 	}
 	t.Logf("balance:%s", of.String())
