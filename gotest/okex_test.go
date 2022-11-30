@@ -1,8 +1,8 @@
 package gotest
 
 import (
-	"auto-deployer/utils/log"
 	"github.com/tristan-club/wizard/pkg/http_util"
+	"go-deployer/utils/log"
 	"strconv"
 	"testing"
 )

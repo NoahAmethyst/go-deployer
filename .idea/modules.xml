@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/auto-deployer.iml" filepath="$PROJECT_DIR$/.idea/auto-deployer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/go-deployer.iml" filepath="$PROJECT_DIR$/.idea/go-deployer.iml" />
     </modules>
   </component>
 </project>

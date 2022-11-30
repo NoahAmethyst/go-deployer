@@ -1,12 +1,12 @@
 package deploy
 
 import (
-	"auto-deployer/constant"
-	token_contract "auto-deployer/contract/token"
-	"auto-deployer/utils/log"
 	"context"
 	"crypto/ecdsa"
 	"fmt"
+	"go-deployer/constant"
+	token_contract "go-deployer/contract/token"
+	"go-deployer/utils/log"
 	"math/big"
 	"os"
 	"testing"

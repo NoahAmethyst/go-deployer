@@ -1,4 +1,4 @@
-module auto-deployer
+module go-deployer
 
 go 1.19
 

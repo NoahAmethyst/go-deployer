@@ -1,0 +1,67 @@
+syntax = "proto3";
+package pb;
+
+option go_package = "deployer_pb/;deployer_pb";
+
+service DeployerService {
+
+  rpc DeployCat(DeployCatReq)returns(DeployResp);
+
+}
+
+message DeployCatReq{
+  //cat information
+  string name = 1;
+  string symbol = 2;
+  string introduction = 3;
+  string app = 4;
+  //max level is 5
+  int32 max_level = 5;
+  map<int32, string> level_imgs = 6;
+  bool can_transfer = 7;
+  // unlimited when negative or zero
+  int64 max_supply = 8;
+  //mint information
+  repeated Price mint_prices = 10;
+
+  //upgrade information
+  map<int32, MultiPrices> upgrade_prices = 21;
+
+  int32 chain_type = 31;
+  string owner = 32;
+}
+
+
+message Price{
+  bool is_eth = 1;
+  string address = 2;
+  //free when negative or zero
+  int64 price = 3;
+}
+
+message MultiPrices{
+  repeated Price multiPrice = 1;
+}
+
+
+
+message DeployResp{
+  int32 code = 1;
+  string message = 2;
+  DeployData data = 3;
+}
+
+message DeployData{
+  map<string, string> contracts = 1;
+  int32 chain_type = 2;
+}
+
+enum ContactType{
+  ERC20 = 0;
+  CAT = 1;
+  CAT_MINTER = 2;
+  CAT_UPGRADER = 3;
+}
+
+
+

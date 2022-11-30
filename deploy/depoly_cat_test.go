@@ -1,11 +1,11 @@
 package deploy
 
 import (
-	"auto-deployer/constant"
-	cat_contract "auto-deployer/contract/cat"
-	minter_contract "auto-deployer/contract/cat_minter"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/tristan-club/kit/chain_info"
+	"go-deployer/constant"
+	cat_contract "go-deployer/contract/cat"
+	minter_contract "go-deployer/contract/cat_minter"
 	"os"
 	"testing"
 )
@@ -33,7 +33,7 @@ func TestDeployCat(t *testing.T) {
 	t.Logf("cat contract deploy hash:%s", catDeployTx.Hash().Hex())
 
 	//Deploy cat contract
-	if err := setNonce(client, auth); err != nil {
+	if err := refreshTxCallData(client, auth); err != nil {
 		t.Errorf("set new nonce error:%s", err)
 		return
 	}
@@ -47,7 +47,7 @@ func TestDeployCat(t *testing.T) {
 	t.Logf("minter contract deploy hash:%s", minterDeployTx.Hash().Hex())
 
 	//call contract
-	if err = setNonce(client, auth); err != nil {
+	if err = refreshTxCallData(client, auth); err != nil {
 		t.Errorf("set new nonce error:%s", err)
 		return
 	}
@@ -57,7 +57,7 @@ func TestDeployCat(t *testing.T) {
 		return
 	}
 
-	if err = setNonce(client, auth); err != nil {
+	if err = refreshTxCallData(client, auth); err != nil {
 		t.Errorf("set new nonce error:%s", err)
 		return
 	}

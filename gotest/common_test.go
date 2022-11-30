@@ -1,8 +1,8 @@
 package gotest
 
 import (
-	"auto-deployer/utils/log"
 	"fmt"
+	"go-deployer/utils/log"
 	"testing"
 )
 
