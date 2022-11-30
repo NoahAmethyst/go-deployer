@@ -84,7 +84,7 @@ func refreshTxCallData(client *ethclient.Client, auth *bind.TransactOpts) error 
 	//refresh nonce
 	nonce, err := client.PendingNonceAt(context.Background(), auth.From)
 	if err != nil {
-		log.Error().Msgf("refresh nonce error:%s%s", err)
+		log.Error().Msgf("refresh nonce error:%s", err)
 		return err
 	}
 	if nonce == auth.Nonce.Uint64() {
