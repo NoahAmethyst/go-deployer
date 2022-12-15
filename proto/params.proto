@@ -1,0 +1,32 @@
+syntax = "proto3";
+package pb;
+
+option go_package = "param_pb/;param_pb";
+
+
+message CATConstructParams {
+  string name = 1;
+  string symbol = 2;
+  string token_url_contract_address = 3;
+  string app_id = 4;
+  int32 max_level = 5;
+  bool can_transfer = 6;
+  int32 max_supply = 7;
+  int32 free_mint_count = 8;
+  message MultiPrices{
+    repeated Fuel multi_price = 1;
+  }
+  repeated MultiPrices prices=9;
+}
+
+
+message Fuel{
+  bool is_eth = 1;
+  string token = 2;
+  //free when negative or zero
+  int64 cost = 3;
+}
+
+
+
+
